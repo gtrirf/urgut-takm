@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    "{{ query }}" Qidiruv Natijalari
+{% endblock title %}
+
+{% block content %}
+
+<div class="container my-4">
+    <!-- Responsive Search Bar -->
+    <div class="d-flex justify-content-center">
+        <form class="d-flex align-items-center w-75" action="{% url 'search' %}" method="get">
+            <!-- Left Tag -->
+
+            <!-- Search Input -->
+            <input type="text" name="q" class="form-control border-0 shadow-sm p-2" placeholder="search this site" value="{{ query }}" style="border-radius: 30px;">
+            <!-- Search Button -->
+            <button type="submit" class="btn btn-light shadow-sm" style="border-radius: 50%; margin-left:20px;">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+</div>
+<div class="container mt-5">
+    {% if query %}
+        <h4 class="text-center mb-4">"{{ query }}" uchun qidiruv natijalari</h4>
+        {% if results %}
+        <div class="row">
+            {% for blog in results %}
+            <div class="col-12 col-md-6 mb-4">
+                <a href="{% url 'blogs:blog_detail' slug=blog.slug %}" class="text-decoration-none text-dark">
+                    <div class="card h-100 shadow-sm">
+                        {% with blog.blogimages_set.all as images %}
+                            {% if images %}
+                                {% if images|length > 1 %}
+                                <!-- Karusel ko'p rasmlar uchun -->
+                                <div id="carousel{{ blog.id }}" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        {% for image in images %}
+                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                            <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ blog.title }}" style="height: 200px; object-fit: cover;">
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ blog.id }}" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Oldingi</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ blog.id }}" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Keyingi</span>
+                                    </button>
+                                </div>
+                                {% else %}
+                                <!-- Bitta rasm -->
+                                <div class="card-img-top">
+                                    <img src="{{ images.0.image.url }}" class="img-fluid" alt="{{ blog.title }}" style="height: 200px; object-fit: cover;">
+                                </div>
+                                {% endif %}
+                            {% else %}
+                            <!-- Default rasm -->
+                            <div class="card-img-top bg-light d-flex justify-content-center align-items-center overflow-hidden" style="height: 150px;">
+                                <img src="#" alt="No Image" class="img-fluid" style="max-height: 100%; max-width: 100%;">
+                            </div>
+                            {% endif %}
+                        {% endwith %}
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ blog.title }}</h5>
+                            <p class="card-text text-muted">{{ blog.body|safe|truncatewords:20 }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted text-center">"{{ query }}" bo'yicha hech narsa topilmadi</p>
+        {% endif %}
+    {% else %}
+    <p class="text-muted text-center">Iltimos, qidiruv so'rovini kiriting.</p>
+    {% endif %}
+</div>
+
+{% endblock content %}

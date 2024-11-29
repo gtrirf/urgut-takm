@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Yangiliklar
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Yangiliklar ro'yxati</h2>
+    <div class="row">
+        {% for blog in blogs %}
+        <div class="col-12 col-md-6 mb-4">
+            <a href="{% url 'blogs:blog_detail' slug=blog.slug %}" class="text-decoration-none text-dark">
+                <div class="card h-100 shadow-sm">
+                    {% with blog.blogimages_set.all as images %}
+                        {% if images %}
+                            {% if images|length > 1 %}
+                            <!-- Karusel ko'p rasmlar uchun -->
+                            <div id="carousel{{ blog.id }}" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    {% for image in images %}
+                                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                        <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ blog.title }}" style="height: 200px; object-fit: cover;">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ blog.id }}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Oldingi</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ blog.id }}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Keyingi</span>
+                                </button>
+                            </div>
+                            {% else %}
+                            <!-- Bitta rasm -->
+                            <div class="card-img-top">
+                                <img src="{{ images.0.image.url }}" class="img-fluid" alt="{{ blog.title }}" style="height: 150px; object-fit: cover;">
+                            </div>
+                            {% endif %}
+                        {% else %}
+                            <!-- Default rasm -->
+                            <div class="card-img-top bg-light d-flex justify-content-center align-items-center overflow-hidden" style="height: 150px;">
+                                <img src="#" alt="No Image" class="img-fluid" style="max-height: 100%; max-width: 100%;">
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    {% if not images %}
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ blog.title }}</h5>
+                            <p class="card-text text-muted">{{ blog.body|safe|truncatewords:20 }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

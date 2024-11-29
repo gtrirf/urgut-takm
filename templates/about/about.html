@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Biz haqimizda
+{% endblock title %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Biz haqimizda</h2> <!-- Masofani qisqartirdik, mb-3 o'rniga mb-1 -->
+        <div class="row">
+            {% for about_item in about_items %}
+            <div class="col-12 ">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- Title (ikki qatorli) -->
+                        <h3 class="card-text text-center" style="font-size: 1.25rem;">{{ about_item.title }}</h3>
+                        <p class="card-text text-center" style="font-size: 1.25rem;">{{ about_item.body|safe }}</p>
+                        
+                        <!-- Image if exists -->
+                        {% if about_item.image %}
+                        <div class="text-center">
+                            <img src="{{ about_item.image.url }}" class="img-fluid mb-3" alt="{{ about_item.title }}" style="max-height: 400px; object-fit: cover;">
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Image text if exists -->
+                        {% if about_item.about_image %}
+                        <p class="text-muted text-center">{{ about_item.about_image }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

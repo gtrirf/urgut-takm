@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Kitoblar ro'yxati
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-center">Eng ko'p o'qilgan kitoblar</h2>
+        <div class="row mt-4">
+            {% for book in books %}
+            <div class="col-6 col-sm-4 col-md-3 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-img-top bg-light d-flex justify-content-center align-items-center overflow-hidden" style="height: 200px;">
+                        <!-- Kitob rasmi -->
+                        {% if book.cover_image %}
+                            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="img-fluid object-fit-contain">
+                        {% else %}
+                            <img src="https://via.placeholder.com/250x250?text=No+Image" alt="{{ book.title }}" class="img-fluid object-fit-contain">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">{{ book.author.nickname }}</p>
+                        <p class="card-text"><strong>{{ book.times_read }}-marta o'qilgan</strong></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
